@@ -61,18 +61,7 @@ public class App {
         });
         statementPanel.add(statementText);
 
-        // -------------------------------------------------------------------------------------------
-        JPanel calculatePanel = new JPanel();
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        layout.setConstraints(calculatePanel, constraints);
-        frame.add(calculatePanel);
-
-        JButton calculateButton = new JButton("Calculate");
-        if(statementText.getText() == null && statementText.getText().isEmpty())
-            calculateButton.setEnabled(false);
-        calculatePanel.add(calculateButton);
-
+        
         // -------------------------------------------------------------------------------------------
         JPanel connectivesPanel = new JPanel();
         constraints.gridx = 0;
@@ -102,12 +91,13 @@ public class App {
         connectivesPanel.add(orConnective);
         
         JButton biConditionalConnective = new JButton("IFF");
-        biConditionalConnective.addActionListener(new ChangeStatementListener(statementText, "IFF"));
         connectivesPanel.add(biConditionalConnective);
+        biConditionalConnective.addActionListener(new ChangeStatementListener(statementText, "IFF"));
         
         JButton conditionalConnective = new JButton("IF");
         conditionalConnective.addActionListener(new ChangeStatementListener(statementText, "IF"));
         connectivesPanel.add(conditionalConnective);
+
 
         // -------------------------------------------------------------------------------------------
         JPanel variablesPanel = new JPanel();

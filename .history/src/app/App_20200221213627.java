@@ -64,14 +64,9 @@ public class App {
         // -------------------------------------------------------------------------------------------
         JPanel calculatePanel = new JPanel();
         constraints.gridx = 0;
-        constraints.gridy = 1;
-        layout.setConstraints(calculatePanel, constraints);
-        frame.add(calculatePanel);
-
-        JButton calculateButton = new JButton("Calculate");
-        if(statementText.getText() == null && statementText.getText().isEmpty())
-            calculateButton.setEnabled(false);
-        calculatePanel.add(calculateButton);
+        constraints.gridy = 2;
+        layout.setConstraints(ca, constraints);
+        frame.add(connectivesPanel);
 
         // -------------------------------------------------------------------------------------------
         JPanel connectivesPanel = new JPanel();

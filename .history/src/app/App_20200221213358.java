@@ -61,18 +61,7 @@ public class App {
         });
         statementPanel.add(statementText);
 
-        // -------------------------------------------------------------------------------------------
-        JPanel calculatePanel = new JPanel();
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        layout.setConstraints(calculatePanel, constraints);
-        frame.add(calculatePanel);
-
-        JButton calculateButton = new JButton("Calculate");
-        if(statementText.getText() == null && statementText.getText().isEmpty())
-            calculateButton.setEnabled(false);
-        calculatePanel.add(calculateButton);
-
+        
         // -------------------------------------------------------------------------------------------
         JPanel connectivesPanel = new JPanel();
         constraints.gridx = 0;
@@ -90,24 +79,25 @@ public class App {
         connectivesPanel.add(rightParentheses);
 
         JButton notConnective = new JButton("~");
-        notConnective.addActionListener(new ChangeStatementListener(statementText, "~"));
         connectivesPanel.add(notConnective);
+        notConnective.addActionListener(new ChangeStatementListener(statementText, "~"));
         
         JButton andConnective = new JButton("AND");
         andConnective.addActionListener(new ChangeStatementListener(statementText, "AND"));
-        connectivesPanel.add(andConnective);
         
         JButton orConnective = new JButton("OR");
         orConnective.addActionListener(new ChangeStatementListener(statementText, "OR"));
-        connectivesPanel.add(orConnective);
         
         JButton biConditionalConnective = new JButton("IFF");
         biConditionalConnective.addActionListener(new ChangeStatementListener(statementText, "IFF"));
-        connectivesPanel.add(biConditionalConnective);
         
         JButton conditionalConnective = new JButton("IF");
         conditionalConnective.addActionListener(new ChangeStatementListener(statementText, "IF"));
+
+        connectivesPanel.add(andConnective);
+        connectivesPanel.add(orConnective);
         connectivesPanel.add(conditionalConnective);
+        connectivesPanel.add(biConditionalConnective);
 
         // -------------------------------------------------------------------------------------------
         JPanel variablesPanel = new JPanel();
