@@ -14,5 +14,19 @@
         "statusBarItem.hoverBackground": "#9477cb",
         "statusBar.foreground": "#15202b"
     },
-    "peacock.color": "#B19CD9"
+    "peacock.color": "#B19CD9",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "src/app/App.class": true,
+        "**/App.class": true,
+        "src/app/*.class": true,
+        "src/app/*.*": false,
+        "App.class": true,
+        "**/*.class": true
+    },
+    "explorerExclude.backup": null
 }

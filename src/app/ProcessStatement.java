@@ -15,7 +15,15 @@ public class ProcessStatement {
         System.out.println("statement: (Calculate) " + statement);
 
         List<String> statementList = Arrays.asList(statement.substring(1).split(" "));
+
         processStatement(statementList);
+        saveTruthStatement(Arrays.asList("q"));
+        saveTruthStatement(Arrays.asList("p"));
+        
+        System.out.println("---------------------------");
+        truthValues.forEach((value) -> {
+            System.out.println(value.getStatement());
+        });
     }
 
     private void processStatement(List<String> statementList) {
@@ -33,9 +41,9 @@ public class ProcessStatement {
                     statementList = processNot(statementList);
                     break;
 
-                case "IF":
-                    statementList = processConditional(statementList);
-                    break;
+                // case "IF":
+                //     statementList = processConditional(statementList);
+                //     break;
 
                 case "p":
                     statementList = processVariable(statementList);
@@ -47,15 +55,8 @@ public class ProcessStatement {
 
                 default:
                     return;
-                // break;
             }
         }
-
-        System.out.println("---------------------------");
-        truthValues.forEach((value) -> {
-            System.out.println(value.getStatement());
-        });
-
     }
 
     private List<String> processParentheses(List<String> statementList) {
@@ -91,10 +92,9 @@ public class ProcessStatement {
         }
     }
 
-    //TODO: create logic for Conditionals
-    private List<String> processConditional(List<String> statementList) {
-        return statementList;
-    }
+    // private List<String> processConditional(List<String> statementList) {
+    //     return statementList;
+    // }
 
     private List<String> processVariable(List<String> statementList) {
         try {

@@ -12,17 +12,7 @@ public class App {
         createFrame();
     }
 
-    private static void createFrame() {
-        JFrame.setDefaultLookAndFeelDecorated(true);
-        JFrame frame = new JFrame("Statement Form Calculator");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 250);
-        GridBagLayout layout = new GridBagLayout();
-        frame.setLayout(layout);
-
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-
+    private static void calculateStatementPanels(JFrame frame, GridBagConstraints constraints, GridBagLayout layout) {
         // -------------------------------------------------------------------------------------------
         JPanel statementPanel = new JPanel();
         constraints.gridx = 0;
@@ -109,8 +99,33 @@ public class App {
         JButton qVar = new JButton("Q");
         qVar.addActionListener(new ChangeStatementListener(statementText, "q"));
         variablesPanel.add(qVar);
+    }
+
+    // private static void calculateCountingPanels(){}
+
+    private static void createFrame() {
+        JFrame.setDefaultLookAndFeelDecorated(true);
+        JFrame frame = new JFrame("Statement Form Calculator");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(600, 400);
+        GridBagLayout layout = new GridBagLayout();
+        frame.setLayout(layout);
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 1.0;
+        constraints.weighty = 1.0;
+
+        // -------------------------------------------------------------------------------------------
+        calculateStatementPanels(frame, constraints, layout);
         
         // -------------------------------------------------------------------------------------------
+        JSeparator separator = new JSeparator();
+        constraints.gridx = 0;
+        constraints.gridy = 4;
+        layout.setConstraints(separator, constraints);
+        separator.setOrientation(SwingConstants.HORIZONTAL);
+        frame.add(separator);
 
         frame.setVisible(true);
     }
