@@ -4,25 +4,12 @@ import app.ActionListeners.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.List;
 
 public class App {
 
-    private static enum Connectives {
-        PARENTHESES, TILDE, AND, OR, CONDITIONAL, BICONDITIONAL
-    }
-
-    private static EnumMap<Connectives, List<String>> connectiveMap = new EnumMap<Connectives, List<String>>(Connectives.class);
 
     public static void main(String[] args) throws Exception {
         createFrame();
-        initMap();
-        
-        connectiveMap.forEach((key,value) -> {
-            System.out.println(String.format("Key: %s || Value: %s", key, value));
-        });
     }
 
     private static void createFrame() {
@@ -69,8 +56,7 @@ public class App {
         frame.add(calculatePanel);
 
         JButton calculateButton = new JButton("Calculate");
-        if(statementText.getText() == null && statementText.getText().isEmpty())
-            calculateButton.setEnabled(false);
+        calculateButton.addActionListener(new CalculateStatementListener(statementText));
         calculatePanel.add(calculateButton);
 
         // -------------------------------------------------------------------------------------------
@@ -101,13 +87,13 @@ public class App {
         orConnective.addActionListener(new ChangeStatementListener(statementText, "OR"));
         connectivesPanel.add(orConnective);
         
-        JButton biConditionalConnective = new JButton("IFF");
-        biConditionalConnective.addActionListener(new ChangeStatementListener(statementText, "IFF"));
-        connectivesPanel.add(biConditionalConnective);
+        // JButton biConditionalConnective = new JButton("IFF");
+        // biConditionalConnective.addActionListener(new ChangeStatementListener(statementText, "IFF"));
+        // connectivesPanel.add(biConditionalConnective);
         
-        JButton conditionalConnective = new JButton("IF");
-        conditionalConnective.addActionListener(new ChangeStatementListener(statementText, "IF"));
-        connectivesPanel.add(conditionalConnective);
+        // JButton conditionalConnective = new JButton("IF");
+        // conditionalConnective.addActionListener(new ChangeStatementListener(statementText, "IF"));
+        // connectivesPanel.add(conditionalConnective);
 
         // -------------------------------------------------------------------------------------------
         JPanel variablesPanel = new JPanel();
@@ -127,17 +113,5 @@ public class App {
         // -------------------------------------------------------------------------------------------
 
         frame.setVisible(true);
-    }
-
-    private static void initMap(){
-        connectiveMap.put(Connectives.PARENTHESES, Arrays.asList("(",")"));
-        connectiveMap.put(Connectives.TILDE, Arrays.asList("~"));
-        connectiveMap.put(Connectives.AND, Arrays.asList("AND"));
-        connectiveMap.put(Connectives.OR, Arrays.asList("OR"));
-        connectiveMap.put(Connectives.CONDITIONAL, Arrays.asList("IF"));
-        connectiveMap.put(Connectives.BICONDITIONAL, Arrays.asList("IFF"));
-    }
-
-    private static void deMorganSwitch(boolean var1, boolean var2, Connectives connectives) {
     }
 }
