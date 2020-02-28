@@ -69,13 +69,14 @@ public class CalculateStatement {
 
     private void generateHashMap(String statement) {
         System.out.println(statement);
-        if (statement.indexOf("~") == 0 && (statement.indexOf("(") == 1 || statement.substring(2).isEmpty())) {
+        if (statement.indexOf("~") == 0) {
             valueTable.put(statement, not(statement));
         } else if (statement.indexOf("||") != -1 && statement.indexOf("||") <= 2) {
             boolean[] firstCondition = valueTable.get(statement.substring(0, statement.indexOf("||")));
             if (statement.indexOf("(") == statement.indexOf("||") + 2) {
                 int closingIndex = statement.indexOf(")");
-                boolean[] secondCondition = valueTable.get(statement.substring(statement.indexOf("||") + 3, closingIndex));
+                boolean[] secondCondition = valueTable
+                        .get(statement.substring(statement.indexOf("||") + 3, closingIndex));
                 valueTable.put(statement, or(firstCondition, secondCondition));
             } else {
                 boolean[] secondCondition = valueTable.get(statement.substring(statement.indexOf("||") + 2));
@@ -85,7 +86,8 @@ public class CalculateStatement {
             boolean[] firstCondition = valueTable.get(statement.substring(0, statement.indexOf("&&")));
             if (statement.indexOf("(") == statement.indexOf("&&") + 2) {
                 int closingIndex = statement.indexOf(")");
-                boolean[] secondCondition = valueTable.get(statement.substring(statement.indexOf("&&") + 3, closingIndex));
+                boolean[] secondCondition = valueTable
+                        .get(statement.substring(statement.indexOf("&&") + 3, closingIndex));
                 valueTable.put(statement, and(firstCondition, secondCondition));
             } else {
                 boolean[] secondCondition = valueTable.get(statement.substring(statement.indexOf("&&") + 2));
