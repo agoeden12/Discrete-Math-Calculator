@@ -13,9 +13,6 @@ public class ProcessStatement {
     private ArrayList<TruthValue> truthValues = new ArrayList<TruthValue>();
 
     public ProcessStatement(String statement, int numberOfVariables) {
-        System.out.println("statement: (Process) " + statement);
-        System.out.println("numberOfVariables: (Process) " + numberOfVariables);
-
         List<String> statementList = Arrays.asList(statement.substring(1).split(" "));
 
         processStatement(statementList);
@@ -23,10 +20,8 @@ public class ProcessStatement {
         addBaseVariables(numberOfVariables);
 
         Collections.reverse(truthValues);
-        System.out.println("---------------------------");
-        truthValues.forEach((value) -> {
-            System.out.println(value.getStatement());
-        });
+        
+        new CalculateStatement(truthValues, numberOfVariables);
     }
 
     private void addBaseVariables(int numberOfVariables) {
@@ -39,9 +34,6 @@ public class ProcessStatement {
     }
 
     private void processStatement(List<String> statementList) {
-
-        System.out.println("Processing Statement: " + statementList);
-
         while (!statementList.isEmpty()) {
 
             switch (statementList.get(0)) {
