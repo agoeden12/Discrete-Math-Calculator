@@ -11,15 +11,17 @@ import javax.swing.JLabel;
 public class CalculateStatementListener implements ActionListener{
 
     private JLabel statement;
+    private JLabel numberOfVariables;
 
-    public CalculateStatementListener(JLabel statement) {
+    public CalculateStatementListener(JLabel statement, JLabel numberOfVariables) {
         this.statement = statement;
+        this.numberOfVariables = numberOfVariables;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (!statement.getText().isBlank())
-            new ProcessStatement(statement.getText());
+            new ProcessStatement(statement.getText(), Integer.parseInt(numberOfVariables.getText()));
     }
     
 }
