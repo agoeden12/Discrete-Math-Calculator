@@ -34,7 +34,6 @@ public class ProcessStatement {
     }
 
     private void processStatement(List<String> statementList) {
-        System.out.println("Processing Statement: " + statementList);
         while (!statementList.isEmpty()) {
 
             switch (statementList.get(0)) {
@@ -86,19 +85,14 @@ public class ProcessStatement {
     private int getFinalParenthesesIndex(List<String> statementList) {
         int index = -1;
         int parenthesesCount = 0;
-        System.out.println("--------------------------------------------------------");
 
         for (String value : statementList) {
             parenthesesCount += value.equals("(") ? 1 : 0;
             parenthesesCount += value.equals(")") ? -1 : 0;
             index++;
-            System.out.println(String.format("Index: %d, Count: %d, Value: %s", index, parenthesesCount, value));
             if (parenthesesCount == 0)
                 break;
         }
-
-        System.out.println("--------------------------------------------------------\n\n");
-
 
         return index;
     }
@@ -110,7 +104,6 @@ public class ProcessStatement {
             if (statementList.get(1).equals("(")) {
                 int closingIndex = getFinalParenthesesIndex(statementList.subList(1, statementListSize));
                 saveTruthStatement(statementList.subList(0, closingIndex + 2));
-                System.out.println(statementList.subList(1, closingIndex + 2));
                 processStatement(processParentheses(statementList.subList(1, closingIndex + 2)));
                 return statementList.subList(closingIndex + 1, statementListSize);
             } else if (statementList.get(2).equals("AND") || statementList.get(2).equals("OR")) {
