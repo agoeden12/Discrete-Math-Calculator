@@ -1,6 +1,7 @@
 package app;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -13,15 +14,39 @@ public class CalculateStatement {
 
     public CalculateStatement(ArrayList<TruthValue> truthValues, int numberOfVariables) {
         this.numberOfVariables = numberOfVariables;
+        int longestString = truthValues.get(truthValues.size() - 1).getStatement().length();
+
+        System.out.println("\n");
         initializeHashMap(truthValues);
+
+        // HashMap<String, boolean[]> sortedValueTable = sortHashMapByKey(valueTable);
+
+        System.out.println("\n");
         valueTable.entrySet().forEach(entry -> {
-            System.out.print(String.format("%-10s", entry.getKey()));
+            System.out.print(String.format("%-" + (longestString + 4) + "s", entry.getKey()));
             for (boolean value : entry.getValue()) {
                 int newValue = value ? 1 : 0;
                 System.out.print(" | " + newValue);
             }
             System.out.println();
         });
+    }
+
+    private HashMap<String, boolean[]> sortHashMapByKey(HashMap<String, boolean[]> oldMap) {
+
+        HashMap<String, boolean[]> newMap = new HashMap<>();
+        int currentKeyLength = 1;
+        while (!oldMap.isEmpty()) {
+            for (String key : oldMap.keySet()) {
+                if (key.length() == currentKeyLength) {
+                    newMap.put(key, oldMap.get(key));
+                    oldMap.remove(key);
+                }
+            }
+            currentKeyLength++;
+        }
+
+        return newMap;
     }
 
     private void initializeHashMap(ArrayList<TruthValue> truthValues) {
@@ -32,7 +57,7 @@ public class CalculateStatement {
                 if (value.getStatement().equals("p")) {
                     valueTable.put("p", pArray);
                 } else {
-                    generateHashMap(value.getStatement());
+                    generateHashMapNew(value.getStatement());
                 }
             }
         } else if (numberOfVariables == 2) {
@@ -45,7 +70,7 @@ public class CalculateStatement {
                 } else if (value.getStatement().equals("q")) {
                     valueTable.put("q", qArray);
                 } else {
-                    generateHashMap(value.getStatement());
+                    generateHashMapNew(value.getStatement());
                 }
             }
         } else {
@@ -61,48 +86,60 @@ public class CalculateStatement {
                 } else if (value.getStatement().equals("r")) {
                     valueTable.put("r", rArray);
                 } else {
-                    generateHashMap(value.getStatement());
+                    generateHashMapNew(value.getStatement());
                 }
             }
         }
     }
 
-    private void generateHashMap(String statement) {
+    private void generateHashMapNew(String statement) {
         System.out.println(statement);
-        if (statement.indexOf("~") == 0) {
-            valueTable.put(statement, not(statement));
-        } else if (statement.indexOf("||") != -1 && statement.indexOf("||") <= 2) {
-            boolean[] firstCondition = valueTable.get(statement.substring(0, statement.indexOf("||")));
-            if (statement.indexOf("(") == statement.indexOf("||") + 2) {
-                int closingIndex = statement.indexOf(")");
-                boolean[] secondCondition = valueTable
-                        .get(statement.substring(statement.indexOf("||") + 3, closingIndex));
-                valueTable.put(statement, or(firstCondition, secondCondition));
-            } else {
-                boolean[] secondCondition = valueTable.get(statement.substring(statement.indexOf("||") + 2));
-                valueTable.put(statement, or(firstCondition, secondCondition));
-            }
-        } else if (statement.indexOf("&&") != -1 && statement.indexOf("&&") <= 2) {
-            boolean[] firstCondition = valueTable.get(statement.substring(0, statement.indexOf("&&")));
-            if (statement.indexOf("(") == statement.indexOf("&&") + 2) {
-                int closingIndex = statement.indexOf(")");
-                boolean[] secondCondition = valueTable
-                        .get(statement.substring(statement.indexOf("&&") + 3, closingIndex));
-                valueTable.put(statement, and(firstCondition, secondCondition));
-            } else {
-                boolean[] secondCondition = valueTable.get(statement.substring(statement.indexOf("&&") + 2));
-                valueTable.put(statement, and(firstCondition, secondCondition));
-            }
-        } else if (statement.indexOf("(") == 0) {
+        boolean[] firstCondition;
+        boolean[] secondCondition;
+        if (statement.indexOf("(") == 0) {
             valueTable.put(statement, parentheses(statement));
-        }
+        } else if (statement.indexOf("|") == 1 || statement.indexOf("|") == 2) {
+            int index = statement.indexOf("||");
+            firstCondition = valueTable.get(statement.substring(0, index));
+
+            String postOr = statement.substring(index+2);
+            secondCondition = postOr.indexOf("(") == 0 ? valueTable.get(postOr.substring(1, getFinalParenthesesIndex(postOr))) : valueTable.get(postOr);
+
+            valueTable.put(statement, or(firstCondition, secondCondition));
+        } else if (statement.indexOf("&") == 1 || statement.indexOf("&") == 2) {
+            int index = statement.indexOf("&&");
+            firstCondition = valueTable.get(statement.substring(0, index));
+
+            String postAnd = statement.substring(index+2);
+            secondCondition = postAnd.indexOf("(") == 0 ? valueTable.get(postAnd.substring(1, getFinalParenthesesIndex(postAnd))) : valueTable.get(postAnd);
+
+            valueTable.put(statement, and(firstCondition, secondCondition));
+        } else if (statement.indexOf("~") == 0) {
+
+            if (statement.contains("(") && statement.indexOf("(") == 1) {
+                int closingIndex = getFinalParenthesesIndex(statement.substring(1)) + 1;
+                if (valueTable.containsKey(statement.substring(0, closingIndex + 1))){
+                    firstCondition = valueTable.get(statement.substring(0, closingIndex + 1));
+                    
+                    String post = statement.substring(closingIndex + 3);
+                    secondCondition = post.indexOf("(") == 0 ? valueTable.get(post.substring(1, getFinalParenthesesIndex(post))) : valueTable.get(post);
+                    
+                    valueTable.put(statement, statement.charAt(closingIndex + 1) == '|' ? or(firstCondition, secondCondition) : and(firstCondition, secondCondition));
+                } else {
+                    valueTable.put(statement, not(statement));
+                }
+            } else {
+                valueTable.put(statement, not(statement));
+            }
+        } 
     }
 
     private boolean[] not(String statement) {
 
         if (statement.contains("(") && statement.indexOf("(") == 1) {
-            int closingIndex = statement.indexOf(")");
-            generateHashMap(statement.substring(2, closingIndex));
+            int closingIndex = getFinalParenthesesIndex(statement.substring(1)) + 1; // since the statement is a not
+                                                                                     // statement it doesn't account for
+                                                                                     // index
             boolean[] oldStatement = valueTable.get(statement.substring(2, closingIndex));
             boolean[] newStatement = new boolean[oldStatement.length];
             for (int i = 0; i < newStatement.length; i++) {
@@ -124,6 +161,9 @@ public class CalculateStatement {
         boolean[] newStatement = new boolean[firstCondition.length];
         for (int i = 0; i < newStatement.length; i++) {
             newStatement[i] = (firstCondition[i]) || (secondCondition[i]);
+
+            // System.out.println(String.format("%b = %b || %b", newStatement[i], firstCondition[i], secondCondition[i]));
+
         }
         return newStatement;
     }
@@ -132,36 +172,59 @@ public class CalculateStatement {
         boolean[] newStatement = new boolean[firstCondition.length];
         for (int i = 0; i < newStatement.length; i++) {
             newStatement[i] = (firstCondition[i]) && (secondCondition[i]);
+
+            // System.out.println(String.format("%b = %b && %b", newStatement[i], firstCondition[i], secondCondition[i]));
         }
         return newStatement;
     }
 
     private boolean[] parentheses(String statement) {
         try {
-            int closingIndex = statement.indexOf(")");
+            int closingIndex = getFinalParenthesesIndex(statement);
+            int startingIndex = statement.indexOf("(") + 1;
             boolean[] firstCondition;
             boolean[] secondCondition;
 
+            // System.out.println("Line 166 ----");
             firstCondition = valueTable.get(statement.substring(1, closingIndex));
             statement = statement.substring(closingIndex + 1);
+            
+            String operand = statement.substring(0, 2);
+            statement = statement.substring(2);
 
-            if (statement.contains("(") && statement.indexOf("(") == 1) {
-                closingIndex = statement.indexOf(")");
-                secondCondition = valueTable.get(statement.substring(1, closingIndex));
+            if (statement.contains("(") && statement.indexOf("(") == 0) {
+                startingIndex = statement.indexOf("(") + 1;
+                closingIndex = getFinalParenthesesIndex(statement);
+
+                secondCondition = valueTable.get(statement.substring(startingIndex, closingIndex));
             } else {
-                secondCondition = valueTable.get(statement.substring(2));
+                secondCondition = valueTable.get(statement);
             }
 
-            if (statement.indexOf("&&") == 0) {
+            if (operand.equals("&&")) {
                 return and(firstCondition, secondCondition);
-            } else if (statement.indexOf("||") == 0) {
+            } else if (operand.equals("||")) {
                 return or(firstCondition, secondCondition);
             } else {
                 return new boolean[firstCondition.length];
             }
         } catch (StringIndexOutOfBoundsException e) {
             return new boolean[2];
-
         }
+    }
+
+    private int getFinalParenthesesIndex(String statement) {
+        int index = -1;
+        int parenthesesCount = 0;
+
+        for (int i = 0; i < statement.length(); i++) {
+            parenthesesCount += statement.substring(i, i + 1).equals("(") ? 1 : 0;
+            parenthesesCount += statement.substring(i, i + 1).equals(")") ? -1 : 0;
+            index++;
+            if (parenthesesCount == 0)
+                break;
+        }
+
+        return index;
     }
 }
