@@ -1,0 +1,6 @@
+ p AND ( q AND r )
+ p AND ~ q
+ p AND ( ~ q OR ~ r )
+ ( ~ p AND q ) AND ~ r
+ ~ p OR ( q AND r )
+ ( p OR ~ q ) AND ( ~ ( ( q OR r ) AND p ) OR r )
