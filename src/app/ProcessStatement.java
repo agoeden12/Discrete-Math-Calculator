@@ -60,7 +60,6 @@ public class ProcessStatement {
     }
 
     private List<String> processParentheses(List<String> statementList) {
-        System.out.println("processParentheses: " + statementList);
         int closingIndex = getFinalParenthesesIndex(statementList);
         int statementListSize = statementList.size();
 
