@@ -60,11 +60,16 @@ public class ProcessStatement {
     }
 
     private List<String> processParentheses(List<String> statementList) {
+        System.out.println("processParentheses: " + statementList);
         int closingIndex = getFinalParenthesesIndex(statementList);
         int statementListSize = statementList.size();
 
         try {
-            if (statementList.get(closingIndex + 1).equals("AND") || statementList.get(closingIndex + 1).equals("OR")) {
+            if (closingIndex + 1 == statementListSize) {
+                saveTruthStatement(statementList.subList(1, closingIndex));
+                processStatement(statementList.subList(1, closingIndex));
+                return statementList.subList(closingIndex + 1, statementListSize);
+            } else if (statementList.get(closingIndex + 1).equals("AND") || statementList.get(closingIndex + 1).equals("OR")) {
                 saveTruthStatement(statementList);
                 processStatement(statementList.subList(1, closingIndex));
                 return statementList.subList(closingIndex + 2, statementListSize);
@@ -72,11 +77,9 @@ public class ProcessStatement {
                 return statementList.subList(closingIndex + 1, statementListSize);
             }
         } catch (ArrayIndexOutOfBoundsException e) {
-            saveTruthStatement(statementList);
             processStatement(statementList.subList(1, closingIndex));
             return statementList.subList(closingIndex + 1, statementListSize);
         } catch (IndexOutOfBoundsException e) {
-            saveTruthStatement(statementList);
             processStatement(statementList.subList(1, closingIndex));
             return statementList.subList(closingIndex + 1, statementListSize);
         }
@@ -104,7 +107,7 @@ public class ProcessStatement {
             if (statementList.get(1).equals("(")) {
                 int closingIndex = getFinalParenthesesIndex(statementList.subList(1, statementListSize));
                 saveTruthStatement(statementList.subList(0, closingIndex + 2));
-                processStatement(processParentheses(statementList.subList(1, closingIndex + 2)));
+                processParentheses(statementList.subList(2, closingIndex + 1));
                 return statementList.subList(closingIndex + 1, statementListSize);
             } else if (statementList.get(2).equals("AND") || statementList.get(2).equals("OR")) {
                 saveTruthStatement(statementList);
