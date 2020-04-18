@@ -1,8 +1,11 @@
 package app;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * CalculateStatement
@@ -19,10 +22,26 @@ public class CalculateStatement {
         System.out.println("\n");
         initializeHashMap(truthValues);
 
-        // HashMap<String, boolean[]> sortedValueTable = sortHashMapByKey(valueTable);
 
+        Map<String, boolean[]> sort = new TreeMap<String, boolean[]>(
+            new Comparator<String>() {
+                @Override
+                public int compare(String s1, String s2) {
+                    if (s2.length() > s1.length()) {
+                        return -1;
+                    } else if (s2.length() < s1.length()) {
+                        return 1;
+                    } else {
+                        return s2.compareTo(s1);
+                    }
+                }
+        });
+
+        sort.putAll(valueTable);
+        
+        
         System.out.println("\n");
-        valueTable.entrySet().forEach(entry -> {
+        sort.entrySet().forEach(entry -> {
             System.out.print(String.format("%-" + (longestString + 4) + "s", entry.getKey()));
             for (boolean value : entry.getValue()) {
                 int newValue = value ? 1 : 0;
@@ -30,23 +49,6 @@ public class CalculateStatement {
             }
             System.out.println();
         });
-    }
-
-    private HashMap<String, boolean[]> sortHashMapByKey(HashMap<String, boolean[]> oldMap) {
-
-        HashMap<String, boolean[]> newMap = new HashMap<>();
-        int currentKeyLength = 1;
-        while (!oldMap.isEmpty()) {
-            for (String key : oldMap.keySet()) {
-                if (key.length() == currentKeyLength) {
-                    newMap.put(key, oldMap.get(key));
-                    oldMap.remove(key);
-                }
-            }
-            currentKeyLength++;
-        }
-
-        return newMap;
     }
 
     private void initializeHashMap(ArrayList<TruthValue> truthValues) {
